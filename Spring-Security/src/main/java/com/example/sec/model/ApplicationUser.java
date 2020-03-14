@@ -1,8 +1,10 @@
 package com.example.sec.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -13,12 +15,12 @@ import javax.persistence.Table;
 public class ApplicationUser {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer user_id;
 	private String username;
 	private String password;
 	private String active;
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne
 	@JoinColumn(name = "role_id")
 	private Role role;
 
@@ -62,4 +64,12 @@ public class ApplicationUser {
 		this.role = role;
 	}
 
+	@Override
+	public String toString() {
+		return "ApplicationUser [user_id=" + user_id + ", username=" + username + ", password=" + password + ", active="
+				+ active + ", role=" + role.getRole() + "]";
+	}
+
+	
+	
 }

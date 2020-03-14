@@ -29,6 +29,16 @@ public class ApplicationUserService {
 		}
 	}
 	
+	public ApplicationUser getUserByUserName(String userName) throws Exception {
+		Optional<ApplicationUser> user =  repo.findByUsernameIgnoreCase(userName);
+		if(user.isPresent()) {
+			return user.get();
+		}
+		else {
+			throw new Exception("User Not Found");
+		}
+	}
+	
 	public String addUser(ApplicationUser user) {
 		repo.save(user);
 		return "User Added: "+user.getUser_id();

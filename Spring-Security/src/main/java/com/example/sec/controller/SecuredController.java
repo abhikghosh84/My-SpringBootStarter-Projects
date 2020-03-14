@@ -16,25 +16,25 @@ import com.example.sec.model.Greeting;
 @RequestMapping("/secured/api")
 public class SecuredController {
 	@GetMapping
-	@PreAuthorize(value = "hasAnyRole('IT_ADMIN', 'TRAINEE')")
+	@PreAuthorize(value = "hasAnyRole('ROLE_IT_ADMIN', 'ROLE_TRAINEE')")
 	public String sayGreeting() {
 		return "Hello from Spring Starter Project - Secured";
 	}
 
 	@PostMapping
-	@PreAuthorize(value = "hasRole('IT_ADMIN')")
+	@PreAuthorize(value = "hasRole('ROLE_IT_ADMIN')")
 	public String addGreeting(@RequestBody Greeting greeting) {
 		return greeting + " is added to the db!";
 	}
 
 	@PutMapping
-	@PreAuthorize(value = "hasRole('IT_ADMIN')")
+	@PreAuthorize(value = "hasRole('ROLE_IT_ADMIN')")
 	public String updateGreeting(@RequestBody Greeting greeting) {
 		return greeting + " is updated in the db!";
 	}
 
 	@DeleteMapping
-	@PreAuthorize(value = "hasRole('IT_ADMIN')")
+	@PreAuthorize(value = "hasRole('ROLE_IT_ADMIN')")
 	public String deleteGreeting(@RequestParam Integer greetingId) {
 		return greetingId + " is deleted from the db!";
 	}

@@ -1,10 +1,15 @@
 package com.example.sec.model;
 
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table(name="applcation_user")
 public class ApplicationUser {
 
 	@Id
@@ -14,6 +19,7 @@ public class ApplicationUser {
 	private String password;
 	private String active;
 	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "role_id")
 	private Role role;
 
 	public Integer getUser_id() {

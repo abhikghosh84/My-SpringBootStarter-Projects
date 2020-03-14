@@ -1,6 +1,7 @@
 package com.example.sec.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,15 @@ public class RoleService {
 		return repo.findAll();
 	}
 	
-	public Object getRoleById(Integer roleId) {
-		return repo.findById(roleId).orElse( new IllegalAccessException("Role Not Found"));
+	public Role getRoleById(Integer roleId) throws Exception {
+		Optional<Role> role =repo.findById(roleId);
+		if(role.isPresent()) {
+			return role.get();
+		}
+		else {
+			throw new Exception("Role not found");
+		}
+
 	}
 	
 	public String addRole(Role role) {

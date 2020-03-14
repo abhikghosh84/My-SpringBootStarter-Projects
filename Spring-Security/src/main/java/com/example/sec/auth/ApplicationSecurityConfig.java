@@ -15,9 +15,11 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 		.authorizeRequests()
 		.antMatchers("/public/**").permitAll()
+		.anyRequest().fullyAuthenticated()
 		.and()
 		.httpBasic();
 
 	}
 
 }
+

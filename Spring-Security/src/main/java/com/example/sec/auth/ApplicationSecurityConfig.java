@@ -1,44 +1,111 @@
 package com.example.sec.auth;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.sec.model.ApplicationUser;
+import com.example.sec.model.Role;
+import com.example.sec.repository.ApplicationUserRepository;
+import com.example.sec.repository.RoleRepository;
+import com.example.sec.service.ApplicationUserDetailsService;
+import com.example.sec.service.ApplicationUserService;
+import com.example.sec.service.RoleService;
+
 @Configuration
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Autowired
+	ApplicationUserDetailsService service;
+	
+	@Autowired
+	CustomAuthenticationProvide authenticationProvider;
+	
 
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("derby").password(appPasswordEncoder().encode("test").toString()).roles("IT_ADMIN");
-		auth.inMemoryAuthentication().withUser("tom").password(appPasswordEncoder().encode("test").toString()).roles("TRAINEE");
+		auth.userDetailsService(service).passwordEncoder(appPasswordEncoder());
+		//System.out.println(auth.isConfigured());
+		//auth.authenticationProvider(authenticationProvider);
+		//auth.inMemoryAuthentication().withUser("Derby S").password(appPasswordEncoder().encode("password")).roles("IT_ADMIN");
 	}
 	
 	
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 
-		http.csrf().disable();
+		http.headers().frameOptions().disable();
 
-		http
-		.authorizeRequests()
-		.antMatchers("/public/**").permitAll()
-		.anyRequest().fullyAuthenticated()
-		.and()
-		.httpBasic();
+		 http
+         .csrf().disable();
+		 
+         http
+         .authorizeRequests()
+         .antMatchers("/h2-console/**").permitAll()
+         .antMatchers("/public/**").permitAll()
+         //.antMatchers("/secured/**").hasAuthority("ROLE_IT_ADMIN")
+         .anyRequest().authenticated()
+         .and()
+         .httpBasic();
 
 	}
 	
 	@Bean
 	public PasswordEncoder appPasswordEncoder() {
 		BCryptPasswordEncoder p = new BCryptPasswordEncoder(10);
+		//return NoOpPasswordEncoder.getInstance();
 		return p;
+	}
+	
+	
+	@Autowired
+	private ApplicationUserRepository userRepo;
+	
+	@Autowired
+	private RoleRepository roleRepo;
+	
+	@Bean
+	public void initDB() {
+		
+		Role role = new Role();
+		ApplicationUser user = new ApplicationUser();
+		role.setRole("IT_ADMIN");
+		roleRepo.save(role);
+		user.setUsername("derby");
+		user.setPassword(appPasswordEncoder().encode("password"));
+		//user.setPassword("password");
+		user.setActive("Y");
+		user.setRole(role);
+		userRepo.save(user);
+		
+		Role role1 = new Role();
+		ApplicationUser user1 = new ApplicationUser();
+		role1.setRole("TRAINEE");
+		role1 = roleRepo.save(role1);
+		user1.setUsername("tom");
+		user1.setPassword(appPasswordEncoder().encode("password"));
+		//user1.setPassword("password");
+		user1.setActive("Y");
+		user1.setRole(role1);
+		userRepo.save(user1);
+		
+		
+		
 	}
 
 }

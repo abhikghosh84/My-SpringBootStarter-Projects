@@ -1,6 +1,7 @@
 package com.example.sec.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,24 @@ public class ApplicationUserService {
 		return repo.findAll();
 	}
 	
-	public Object getUserById(Integer userId) {
-		return repo.findById(userId).orElse(new IllegalAccessException("User Not Found"));
+	public ApplicationUser getUserById(Integer userId) throws Exception {
+		Optional<ApplicationUser> user =  repo.findById(userId);
+		if(user.isPresent()) {
+			return user.get();
+		}
+		else {
+			throw new Exception("User Not Found");
+		}
+	}
+	
+	public ApplicationUser getUserByUserName(String userName) throws Exception {
+		Optional<ApplicationUser> user =  repo.findByUsernameIgnoreCase(userName);
+		if(user.isPresent()) {
+			return user.get();
+		}
+		else {
+			throw new Exception("User Not Found");
+		}
 	}
 	
 	public String addUser(ApplicationUser user) {

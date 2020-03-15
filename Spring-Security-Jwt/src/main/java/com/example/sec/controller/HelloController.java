@@ -21,7 +21,7 @@ public class HelloController {
 
     @GetMapping("/")
     public String welcome() {
-        return "Welcome to javatechie !!";
+        return "Welcome to this world !!";
     }
 
     @PostMapping("/authenticate")

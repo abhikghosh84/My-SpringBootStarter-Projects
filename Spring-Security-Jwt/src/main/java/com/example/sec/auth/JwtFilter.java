@@ -21,7 +21,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
-    private CustomUserDetailsService service;
+    private ApplicationUserDetailsService service;
 
 
     @Override
@@ -40,6 +40,8 @@ public class JwtFilter extends OncePerRequestFilter {
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = service.loadUserByUsername(userName);
+            
+            System.out.println(">>>>>>>>>"+userDetails.getAuthorities());
 
             if (jwtUtil.validateToken(token, userDetails)) {
 

@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.sec.model.ApplicationUser;
 
+@SuppressWarnings("serial")
 public class CustomUserDetails implements UserDetails{
 	
 	private ApplicationUser user;
@@ -43,19 +44,16 @@ public class CustomUserDetails implements UserDetails{
 
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 

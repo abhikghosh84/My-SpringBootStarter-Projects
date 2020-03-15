@@ -19,21 +19,20 @@ public class ApplicationUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		CustomUserDetails customeUserDetails = null;
 
-			try {
-				ApplicationUser user = service.getUserByUserName(username);
-				
-				System.out.println(user);
-				
-				customeUserDetails = new CustomUserDetails();
-				
-				customeUserDetails.setUser(user);
-				
-				System.out.println(customeUserDetails);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		try {
+			ApplicationUser user = service.getUserByUserName(username);
 
-		
+			System.out.println(user);
+
+			customeUserDetails = new CustomUserDetails();
+
+			customeUserDetails.setUser(user);
+
+			System.out.println(customeUserDetails);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return customeUserDetails;
 	}
 

@@ -1,5 +1,7 @@
 package com.example.sec.auth;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 
 @Service
 public class JwtUtil {
@@ -50,7 +53,25 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    	try {
+    		final String username = extractUsername(token);
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    	} catch(SignatureException e) {
+    		return true;
+    	}
+        
+    }
+    
+    public String decodeUser(String token) {
+    	
+    	String[] parts = token.split("\\.", 0);
+        byte[] bytes = Base64.getUrlDecoder().decode(parts[1]);
+        String decodedString = new String(bytes, StandardCharsets.UTF_8);
+
+        System.out.println("Decoded: " + decodedString);
+        
+    	
+    	return decodedString.substring(decodedString.indexOf("sub\":\"")+1, decodedString.indexOf("\",\""));
+    	
     }
 }

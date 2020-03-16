@@ -3,6 +3,10 @@ package com.example.sec.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,8 +24,15 @@ public class HelloController {
     private AuthenticationManager authenticationManager;
 
     @GetMapping("/")
-    public String welcome() {
-        return "Welcome to this world !!";
+    public String welcome( ) {
+    	
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    	
+    	System.out.println("*************"+auth.getPrincipal());
+    	System.out.println("++++++++++++++"+auth.getCredentials());
+    	System.out.println("=============="+auth.getDetails());
+    	
+        return "Welcome to this world : "+auth.getName();
     }
 
     @PostMapping("/authenticate")
